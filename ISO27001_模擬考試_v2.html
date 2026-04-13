@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISO 27001:2022 主導稽核員模擬考試</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0F2144;--blue:#1D5FA8;--blu:#E8F0FC;--teal:#0A7566;--tel:#E2F5F1;--red:#B91C1C;--rdl:#FEE2E2;--grn:#15803D;--gnl:#DCFCE7;--amb:#92400E;--aml:#FEF3C7;--g0:#F8FAFC;--g1:#F1F5F9;--g2:#E2E8F0;--g3:#CBD5E1;--g4:#94A3B8;--g5:#64748B;--g6:#475569;--g7:#334155;--g8:#1E293B;--r:10px;--rl:16px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--g0);color:var(--g8);min-height:100vh}
+.topbar{background:var(--navy);height:54px;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.topbar-t{color:#fff;font-size:13px;font-weight:500}
+.topbar-r{display:flex;align-items:center;gap:12px}
+#timer{font-family:'IBM Plex Mono',monospace;color:#93C5FD;font-size:15px;font-weight:500}
+#timer.warn{color:#FCA5A5}
+.pill{background:rgba(255,255,255,.15);color:#fff;font-size:11px;padding:3px 10px;border-radius:20px}
+.wrap{max-width:800px;margin:0 auto;padding:1.5rem 1rem 5rem}
+/* START */
+.hero{text-align:center;padding:2.5rem 0 1.5rem}
+.hero h2{font-size:26px;font-weight:700;color:var(--navy);line-height:1.3;margin-bottom:.5rem}
+.hero p{font-size:13px;color:var(--g5)}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:1.2rem 0}
+.rule{background:#fff;border:1px solid var(--g2);border-radius:var(--r);padding:.9rem;text-align:center}
+.rule-n{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:500;color:var(--navy)}
+.rule-l{font-size:11px;color:var(--g5);margin-top:3px;line-height:1.4}
+.alert{background:var(--rdl);border:1px solid #FCA5A5;border-radius:var(--r);padding:.9rem 1rem;margin:1rem 0;font-size:13px;color:var(--red);line-height:1.6}
+.alert strong{display:block;font-weight:700;margin-bottom:3px}
+.type-box{background:#fff;border:1px solid var(--g2);border-radius:var(--r);padding:1rem;margin:1rem 0}
+.type-box h3{font-size:11px;font-weight:700;color:var(--g6);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.05em}
+.type-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--g2);font-size:13px;color:var(--g6)}
+.type-row:last-child{border:none}
+.tb{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.tb-s{background:#DBEAFE;color:#1E40AF}.tb-m{background:#EDE9FE;color:#5B21B6}
+.tb-f{background:var(--aml);color:var(--amb)}.tb-mt{background:var(--gnl);color:#065F46}
+.tb-o{background:#FCE7F3;color:#9D174D}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:1rem 0}
+.mode{border:1.5px solid var(--g2);border-radius:var(--rl);padding:1.1rem;cursor:pointer;background:#fff;transition:all .15s;text-align:left}
+.mode:hover{border-color:var(--blue);box-shadow:0 3px 12px rgba(29,95,168,.12);transform:translateY(-1px)}
+.mode.hot{border-color:var(--red);background:var(--rdl)}
+.mode.hot:hover{border-color:var(--red);box-shadow:0 3px 12px rgba(185,28,28,.12)}
+.mode-tag{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px}
+.mode.hot .mode-tag{color:var(--red)}.mode:not(.hot) .mode-tag{color:var(--blue)}
+.mode h3{font-size:14px;font-weight:700;margin-bottom:3px}
+.mode p{font-size:12px;color:var(--g5);line-height:1.5}
+.mode.hot h3,.mode.hot p{color:var(--red)}
+.sec-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.sec-btn{border:1px solid var(--g2);border-radius:var(--r);padding:.65rem;cursor:pointer;background:#fff;text-align:center;transition:all .15s;font-size:12px;font-weight:500}
+.sec-btn:hover{border-color:var(--blue);background:var(--blu)}
+.sec-btn span{display:block;font-size:11px;color:var(--g4);font-weight:400;margin-top:2px}
+/* EXAM */
+.sec-bar{display:flex;gap:5px;margin-bottom:.8rem}
+.seg{height:5px;flex:1;border-radius:3px;background:var(--g2);transition:background .3s}
+.seg.done{background:var(--teal)}.seg.active{background:var(--blue)}
+.seg.s2.done{background:var(--red)}.seg.s2.active{background:#D97706}
+.prog-row{display:flex;justify-content:space-between;margin-bottom:.8rem;font-size:12px;color:var(--g5)}
+.prog-ans{color:var(--teal);font-weight:500}
+.sec-lbl{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-bottom:.7rem}
+.sec-lbl.def{background:var(--blu);color:var(--blue)}.sec-lbl.hot{background:var(--rdl);color:var(--red)}
+.sc-box{background:var(--g1);border-left:3px solid var(--blue);border-radius:0 var(--r) var(--r) 0;padding:.75rem 1rem;margin-bottom:.8rem;font-size:13px;color:var(--g7);line-height:1.7}
+.sc-lbl{font-size:10px;font-weight:700;letter-spacing:.07em;color:var(--blue);text-transform:uppercase;margin-bottom:4px}
+.q-card{background:#fff;border:1px solid var(--g2);border-radius:var(--rl);padding:1.25rem;margin-bottom:1rem}
+.q-meta{font-size:11px;color:var(--g4);margin-bottom:.5rem;display:flex;align-items:center;gap:8px}
+.q-text{font-size:14px;font-weight:500;color:var(--g8);line-height:1.65;margin-bottom:1rem}
+.hint{font-size:11px;color:var(--g4);margin-bottom:.5rem;font-style:italic}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:.75rem .9rem;border:1.5px solid var(--g2);border-radius:var(--r);margin-bottom:6px;cursor:pointer;transition:all .12s;background:#fff;user-select:none}
+.opt:hover:not(.locked){border-color:var(--blue);background:var(--blu)}
+.opt.sel{border-color:var(--blue);background:var(--blu)}
+.opt.correct{border-color:var(--grn);background:var(--gnl)}
+.opt.wrong{border-color:var(--red);background:var(--rdl)}
+.opt.missed{border-color:var(--amb);background:var(--aml)}
+.opt.locked{cursor:default}
+.opt-k{width:26px;height:26px;border-radius:6px;background:var(--g1);border:1px solid var(--g3);font-size:12px;font-weight:700;color:var(--g6);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s}
+.opt.sel .opt-k{background:var(--blue);border-color:var(--blue);color:#fff}
+.opt.correct .opt-k{background:var(--grn);border-color:var(--grn);color:#fff}
+.opt.wrong .opt-k,.opt.missed .opt-k{background:var(--red);border-color:var(--red);color:#fff}
+.opt-t{font-size:13px;color:var(--g7);line-height:1.6;padding-top:2px}
+.fill-text{font-size:14px;color:var(--g7);line-height:2.8;margin-bottom:.8rem}
+.slot{display:inline-block;min-width:90px;padding:3px 12px;border:2px dashed var(--g3);border-radius:6px;background:var(--g1);text-align:center;font-size:13px;font-weight:500;color:var(--g5);cursor:pointer;transition:all .15s;vertical-align:middle;margin:0 4px}
+.slot.filled{border-color:var(--blue);background:var(--blu);color:var(--blue);border-style:solid}
+.slot.correct-s{border-color:var(--grn);background:var(--gnl);color:var(--grn);border-style:solid}
+.slot.wrong-s{border-color:var(--red);background:var(--rdl);color:var(--red);border-style:solid}
+.pool{display:flex;flex-wrap:wrap;gap:8px;padding:.75rem;background:var(--g1);border-radius:var(--r);margin-top:.5rem}
+.chip{padding:6px 14px;border:1.5px solid var(--g3);border-radius:20px;background:#fff;font-size:13px;cursor:pointer;transition:all .15s;user-select:none}
+.chip:hover:not(.used):not(.lkd){border-color:var(--blue);color:var(--blue)}
+.chip.sel-c{border-color:var(--blue);background:var(--blu);color:var(--blue)}
+.chip.used{opacity:.3;cursor:default}.chip.lkd{cursor:default}
+.match-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:.8rem}
+.match-col h4{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--g5);margin-bottom:8px}
+.mi{padding:.6rem .9rem;border:1.5px solid var(--g2);border-radius:var(--r);background:#fff;font-size:13px;color:var(--g7);margin-bottom:6px;cursor:pointer;transition:all .15s;min-height:42px;line-height:1.5}
+.mi.lft:hover:not(.md):not(.lkd){border-color:var(--blue);background:var(--blu)}
+.mi.lft.act{border-color:var(--blue);background:var(--blu);font-weight:500}
+.mi.lft.md{border-color:var(--teal);background:var(--tel);cursor:default}
+.mi.rgt:hover:not(.md):not(.lkd){border-color:var(--blue);background:var(--blu)}
+.mi.rgt.md{border-color:var(--teal);background:var(--tel);cursor:default}
+.mi.mc{border-color:var(--grn)!important;background:var(--gnl)!important}
+.mi.mw{border-color:var(--red)!important;background:var(--rdl)!important}
+.order-hint{font-size:11px;color:var(--g4);margin-bottom:.5rem;font-style:italic}
+.oi{display:flex;align-items:center;gap:10px;padding:.7rem 1rem;border:1.5px solid var(--g2);border-radius:var(--r);background:#fff;margin-bottom:7px;cursor:grab;transition:all .15s;font-size:13px;color:var(--g7);user-select:none}
+.oi:hover:not(.lkd){border-color:var(--blue);background:var(--blu)}
+.oi.dragging{opacity:.35;border-style:dashed}
+.oi.over{border-color:var(--blue);border-style:dashed;background:var(--blu)}
+.oi.oc{border-color:var(--grn);background:var(--gnl);cursor:default}
+.oi.ow{border-color:var(--red);background:var(--rdl);cursor:default}
+.on{width:24px;height:24px;border-radius:6px;background:var(--g1);font-size:11px;font-weight:700;color:var(--g5);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.di{color:var(--g3);font-size:16px;flex-shrink:0;letter-spacing:-2px}
+.explain{background:var(--tel);border-left:3px solid var(--teal);border-radius:0 var(--r) var(--r) 0;padding:.8rem 1rem;margin-top:1rem}
+.explain .elb{font-size:10px;font-weight:700;letter-spacing:.07em;color:var(--teal);text-transform:uppercase;margin-bottom:4px}
+.explain p{font-size:13px;color:var(--teal);line-height:1.7}
+.btn-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:.75rem}
+.btn{padding:10px 20px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'Noto Sans TC',sans-serif;transition:all .15s}
+.btn-out{background:#fff;border:1.5px solid var(--g3);color:var(--g7)}
+.btn-out:hover{border-color:var(--blue);color:var(--blue)}
+.btn-out:disabled{opacity:.4;cursor:default}
+.btn-sub{background:var(--blue);color:#fff}
+.btn-sub:hover{background:#174e8e}
+.btn-sub:disabled{opacity:.4;cursor:default}
+.btn-nxt{background:var(--teal);color:#fff}
+.btn-nxt:hover{background:#085f52}
+.btn-pri{background:var(--navy);color:#fff}
+.btn-pri:hover{background:#162a4a}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:#991b1b}
+.ml{margin-left:auto}
+/* RESULT */
+.result-hero{text-align:center;margin-bottom:2rem}
+.ri{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 1rem}
+.ri.pass{background:var(--gnl)}.ri.fail{background:var(--rdl)}
+.rt{font-size:24px;font-weight:700;margin-bottom:.4rem}
+.rt.pass{color:var(--grn)}.rt.fail{color:var(--red)}
+.rs{font-family:'IBM Plex Mono',monospace;font-size:52px;font-weight:500;color:var(--navy);margin:.8rem 0 .2rem}
+.rsb{font-size:13px;color:var(--g5)}
+.sec-break{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:1.5rem 0}
+.sb{border-radius:var(--r);padding:.8rem .4rem;text-align:center;border:1px solid}
+.sb.pass{background:var(--gnl);border-color:#86EFAC}.sb.fail{background:var(--rdl);border-color:#FCA5A5}
+.sb-lbl{font-size:10px;font-weight:700;letter-spacing:.05em;margin-bottom:4px}
+.sb.pass .sb-lbl{color:var(--grn)}.sb.fail .sb-lbl{color:var(--red)}
+.sb-pct{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:500}
+.sb.pass .sb-pct{color:var(--grn)}.sb.fail .sb-pct{color:var(--red)}
+.sb-st{font-size:11px;margin-top:2px}
+.sb.pass .sb-st{color:var(--grn)}.sb.fail .sb-st{color:var(--red)}
+.divider{height:1px;background:var(--g2);margin:1.5rem 0}
+.rev-head{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g5);margin-bottom:.8rem}
+.rev-item{background:#fff;border:1px solid var(--g2);border-radius:var(--r);padding:.9rem 1.1rem;margin-bottom:7px;display:flex;align-items:flex-start;gap:10px}
+.rev-item.rp{border-left:3px solid var(--grn)}.rev-item.rf{border-left:3px solid var(--red)}
+.rev-q{font-size:13px;font-weight:500;color:var(--g8);margin-bottom:4px;line-height:1.5}
+.rev-d{font-size:12px;color:var(--g5);display:flex;gap:12px;flex-wrap:wrap}
+.rev-ok{color:var(--grn);font-weight:500}.rev-ng{color:var(--red)}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-t">ISO 27001:2022 主導稽核員模擬考試 · CQI/IRCA</div>
+  <div class="topbar-r">
+    <div id="timer" style="display:none"></div>
+    <div class="pill" id="spill" style="display:none"></div>
+  </div>
+</div>
+<div class="wrap">
+
+<!-- START -->
+<div id="screen-start">
+  <div class="hero">
+    <h2>ISO 27001:2022<br>資訊安全管理系統主導稽核員</h2>
+    <p>CQI/IRCA 認證考試模擬練習 · 內建題庫 · 5 種題型完整模擬</p>
+  </div>
+  <div class="rules">
+    <div class="rule"><div class="rule-n">40</div><div class="rule-l">每次出題數</div></div>
+    <div class="rule"><div class="rule-n">50%</div><div class="rule-l">每科 + 總分通過線</div></div>
+    <div class="rule"><div class="rule-n" style="font-size:16px">1hr45m</div><div class="rule-l">考試時間</div></div>
+  </div>
+  <div class="alert">
+    <strong>⚠ 你同事 Section 2 未通過！</strong>
+    Section 2 考「ISO 27001 條款要求 + 附錄A控制措施」，建議先選「Section 2 專攻」重點補強，再做完整模擬考！
+  </div>
+  <div class="type-box">
+    <h3>考試包含 5 種題型（與真實 CQI/IRCA 線上考試相同）</h3>
+    <div class="type-row"><span class="tb tb-s">單選題</span>選擇一個正確答案</div>
+    <div class="type-row"><span class="tb tb-m">多選題</span>選擇所有正確答案（如：5選3）</div>
+    <div class="type-row"><span class="tb tb-f">填空題</span>點詞語再點空格填入</div>
+    <div class="type-row"><span class="tb tb-mt">配對題</span>點左側再點右側完成配對</div>
+    <div class="type-row"><span class="tb tb-o">排序題</span>拖曳調整至正確順序</div>
+  </div>
+  <div class="modes">
+    <div class="mode hot" onclick="startMode('full')">
+      <div class="mode-tag">完整模擬</div>
+      <h3>完整模擬考試</h3>
+      <p>5 個 Section 各 8 題，共 40 題<br>含計時器，模擬真實考試環境</p>
+    </div>
+    <div class="mode" onclick="startMode('s2')">
+      <div class="mode-tag">重點補強 ★</div>
+      <h3>Section 2 專攻</h3>
+      <p>ISO 27001 條款 + 附錄A控制措施<br>針對未通過科目集中練習</p>
+    </div>
+  </div>
+  <div class="sec-grid">
+    <div class="sec-btn" onclick="startMode('s1')">Section 1<span>ISMS 概論</span></div>
+    <div class="sec-btn" onclick="startMode('s3')">Section 3<span>稽核原則</span></div>
+    <div class="sec-btn" onclick="startMode('s4')">Section 4<span>稽核準備</span></div>
+    <div class="sec-btn" onclick="startMode('s5')">Section 5<span>執行稽核</span></div>
+  </div>
+</div>
+
+<!-- EXAM -->
+<div id="screen-exam" style="display:none">
+  <div class="sec-bar" id="secbar"></div>
+  <div class="prog-row">
+    <span id="prog-t"></span>
+    <span class="prog-ans" id="prog-a"></span>
+  </div>
+  <div id="qarea"></div>
+  <div class="btn-row">
+    <button class="btn btn-out" id="btn-prev" onclick="nav(-1)" disabled>← 上一題</button>
+    <button class="btn btn-sub" id="btn-sub" onclick="doSubmit()" disabled>送出答案</button>
+    <button class="btn btn-nxt ml" id="btn-nxt" onclick="nav(1)" style="display:none">下一題 →</button>
+    <button class="btn btn-pri ml" id="btn-fin" onclick="showResult()" style="display:none">查看結果</button>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="screen-result" style="display:none"></div>
+
+</div><!-- /wrap -->
+
+<script>
+// ══════════════════════════════════════════
+// 題庫 (每個 Section 10 題，共 50 題，隨機抽)
+// ══════════════════════════════════════════
+const BANK = {
+s1:[
+  {type:'single',section:'s1',scenario:'一家製造商IT主管說：「我們只要保護伺服器資料就夠了。」',q:'根據 ISO 27001:2022，「資訊安全」的保護範疇是？',opts:['A. 只涵蓋數位資料及 IT 系統','B. 涵蓋所有形式資訊的機密性、完整性與可用性','C. 主要是 IT 部門的責任','D. 只涵蓋客戶個人資料'],ans:'B',exp:'ISO 27001 將資訊定義為各種形式（數位、紙本、口頭），CIA 三屬性適用於所有資訊型態，且是全組織共同責任。'},
+  {type:'single',section:'s1',scenario:'',q:'ISO 27001:2022 附錄 A 共有幾項控制措施，分為哪四大類別？',opts:['A. 114 項：管理性/操作性/技術性/實體性','B. 93 項：組織性/人員性/實體性/技術性','C. 133 項：管理性/人員性/技術性/法規性','D. 77 項：策略性/戰術性/操作性/技術性'],ans:'B',exp:'ISO 27001:2022 將舊版 114 項整合重組為 93 項：組織性(37項)、人員性(8項)、實體性(14項)、技術性(34項)。'},
+  {type:'single',section:'s1',scenario:'公司 A 完成 ISO 27001 認證後，CEO 宣告：「現在資訊安全工作大功告成！」',q:'稽核員應如何評估此聲明？',opts:['A. 正確，認證代表 ISMS 已達最高標準','B. 不正確，ISO 27001 要求持續改善，認證只是某時間點的符合性確認','C. 正確，只需每三年重新稽核','D. 部分正確，認證後可降低資安投入'],ans:'B',exp:'ISO 27001 基於 PDCA 持續改善循環，認證是起點而非終點。組織需持續監控、審查、改善 ISMS 並接受年度監督稽核。'},
+  {type:'single',section:'s1',scenario:'',q:'ISO 27001 PDCA 循環中，「Check（查核）」階段的主要工作是？',opts:['A. 建立 ISMS 範圍、進行風險評鑑','B. 實施控制措施、執行安全意識培訓','C. 監控量測 ISMS 績效、進行內部稽核','D. 採取矯正措施、推動持續改善'],ans:'C',exp:'Check 階段包含監控與量測，如內部稽核、管理審查，以評估 ISMS 是否達到預期目標。Plan=規劃、Do=執行、Check=查核、Act=行動。'},
+  {type:'single',section:'s1',scenario:'',q:'根據 ISO 27001 條款 4.3，ISMS「範圍」的定義，下列何者正確？',opts:['A. 範圍必須涵蓋整個組織','B. 範圍可以是整個組織或其中一部分，但須清楚界定邊界及介面','C. 範圍由認證機構決定','D. 範圍一旦定義就不能更改'],ans:'B',exp:'條款 4.3 允許彈性定義範圍，可以是整體或部分組織，但必須清楚界定邊界並識別與範圍外實體的介面及相依關係。'},
+  {type:'single',section:'s1',scenario:'',q:'ISO 27001:2022 新增的「威脅情資」（A.5.7）控制屬於哪個類別？',opts:['A. 技術性控制','B. 實體性控制','C. 組織性控制','D. 人員性控制'],ans:'C',exp:'威脅情資（A.5.7）屬於組織性控制，要求組織蒐集並分析威脅情資以強化風險管理決策。2022 版共新增 11 項控制。'},
+  {type:'multi',section:'s1',scenario:'稽核員正在審查公司的 ISMS 文件。',q:'根據 ISO 27001 條款 7.5，以下哪兩項屬於需要「保留（Retain）」的記錄？（請選擇 2 個正確答案）',opts:['A. 資訊安全政策','B. 風險評鑑結果記錄','C. 存取控制程序','D. 內部稽核報告','E. 附錄 A 控制措施清單'],ans:['B','D'],exp:'需「維持（Maintain）」的是政策/程序等現行文件；需「保留（Retain）」的是活動的證據記錄，如風險評鑑結果、稽核報告。'},
+  {type:'match',section:'s1',scenario:'',q:'請將左側的 ISO 27001:2022 條款編號與右側的條款名稱正確配對。',left:['條款 4','條款 6','條款 8','條款 9'],right:['A. 運作（Operation）','B. 組織情境（Context）','C. 規劃（Planning）','D. 績效評估（Performance Evaluation）'],ans:{'條款 4':'B','條款 6':'C','條款 8':'A','條款 9':'D'},exp:'ISO 27001 條款架構：4=組織情境、5=領導力、6=規劃、7=支援、8=運作、9=績效評估、10=改善。'},
+  {type:'fill',section:'s1',scenario:'',q:'請將正確的詞語填入空白，完成 ISO 27001 PDCA 循環的描述。',template:'ISO 27001 採用 [BLANK_0] 循環，確保 ISMS 能夠持續改善；其中「查核」階段的核心活動是進行 [BLANK_1]，以評估 ISMS 的有效性。',words:['PDCA','OODA','內部稽核','風險評鑑','管理審查','外部稽核'],ans:['PDCA','內部稽核'],exp:'ISO 27001 基於 PDCA（Plan規劃-Do執行-Check查核-Act行動）持續改善循環。查核階段包含內部稽核和管理審查。'},
+  {type:'order',section:'s1',scenario:'',q:'請將以下 ISO 27001 認證稽核的步驟依正確時序排列（由先至後）。',items:['執行 Stage 2 現場稽核','接受稽核委託','執行 Stage 1 文件審查','提交稽核報告','執行開幕會議'],ans:[1,2,4,0,3],exp:'正確順序：① 接受稽核委託 → ② Stage 1 文件審查 → ③ 開幕會議 → ④ Stage 2 現場稽核 → ⑤ 提交稽核報告。'}
+],
+s2:[
+  {type:'single',section:'s2',scenario:'稽核員在審查 SoA 時，發現控制 A.5.7「威脅情資」被排除，理由只寫「不適用」。',q:'此 SoA 的排除說明是否符合 ISO 27001:2022 條款 6.1.3？',opts:['A. 符合，組織有權排除任何控制措施','B. 不符合，排除控制必須提供充分的正當理由，「不適用」不構成充分說明','C. 符合，只要在 SoA 中標記排除即可','D. 不符合，所有 93 項控制均為強制要求'],ans:'B',exp:'條款 6.1.3(d) 要求排除附錄 A 控制時必須提供正當理由（Justification），並確認排除不會影響達成資訊安全目標。僅寫「不適用」不夠充分。'},
+  {type:'single',section:'s2',scenario:'公司的風險評鑑文件中，有三項風險被標記「已接受」，但沒有任何核准記錄。',q:'此情況如何分類？',opts:['A. 可接受，風險接受不需要說明理由','B. 不符合事項，風險接受需有文件化決策依據且須由風險擁有者核准','C. 輕微行政疏失，不影響 ISMS 整體有效性','D. 需改善但不算不符合'],ans:'B',exp:'條款 6.1.3(e) 要求取得風險擁有者對風險處置計畫及殘餘風險接受的核准，並保留文件化資訊。缺乏核准記錄屬不符合事項。'},
+  {type:'single',section:'s2',scenario:'ISMS 負責人說：「我們的管理審查每年底由各部門主管輪流主持。」',q:'此做法是否符合 ISO 27001 條款 9.3？',opts:['A. 符合，定期執行管理審查即可','B. 不符合，管理審查必須由最高管理階層（Top Management）主持','C. 符合，部門主管代表最高管理階層是可接受的','D. 部分符合，頻率足夠但主持人需調整'],ans:'B',exp:'條款 9.3 明確規定管理審查須由「最高管理階層」主持，非各部門主管可代替，以確保 ISMS 獲得最高層級的關注與承諾。'},
+  {type:'single',section:'s2',scenario:'公司的內部稽核由負責執行 ISMS 控制措施的資訊安全團隊自行進行。',q:'此安排的主要問題是？',opts:['A. 沒問題，由熟悉系統的人執行效率較高','B. 違反獨立性要求，稽核員不能稽核自身負責的工作','C. 只要有稽核報告，誰執行不重要','D. 稽核頻率應提高才能彌補此問題'],ans:'B',exp:'條款 9.2 要求內部稽核確保「客觀性與公正性」，稽核員不得稽核自身執行的工作。自我審查存在嚴重利益衝突，可能導致稽核結果不客觀。'},
+  {type:'single',section:'s2',scenario:'',q:'「最小權限原則」（Least Privilege，A.8.2）的核心目的是？',opts:['A. 所有使用者擁有相同存取權限，確保公平','B. 使用者僅被授予執行職責所需的最低必要權限，降低風險','C. 管理員擁有所有系統的完整存取權','D. 只有 IT 人員可存取系統'],ans:'B',exp:'最小權限原則確保使用者、系統、流程只獲得完成工作所需的最少權限，有效降低未授權存取、內部威脅及橫向移動風險。'},
+  {type:'multi',section:'s2',scenario:'稽核員正在評估公司的風險評鑑流程。',q:'根據 ISO 27001 條款 6.1.2，完整的風險評鑑流程應包含哪三個步驟？（請選擇 3 個正確答案）',opts:['A. 風險識別（Risk Identification）','B. 滲透測試（Penetration Testing）','C. 風險分析（Risk Analysis）','D. 風險評估（Risk Evaluation）','E. 資產採購規劃'],ans:['A','C','D'],exp:'風險評鑑三步驟：識別（找出威脅/漏洞）、分析（評估可能性與影響）、評估（比較風險準則決定處置優先序）。滲透測試是技術驗證工具，資產採購與風險評鑑無直接關係。'},
+  {type:'multi',section:'s2',scenario:'TechCo 發生重大資安事件，IT 部門修補漏洞後宣告問題解決。',q:'根據 ISO 27001 條款 10.1，完整的不符合事項處理應包含哪四個要素？（請選擇 4 個正確答案）',opts:['A. 即時採取反應措施控制事件','B. 分析根本原因','C. 立即通報媒體','D. 實施矯正措施防止再發','E. 評估矯正措施的有效性','F. 頒發獎金給發現問題的員工'],ans:['A','B','D','E'],exp:'條款 10.1：(a) 即時反應、(b) 分析根本原因、(c) 實施矯正措施、(d) 審查措施有效性、(e) 更新文件、(f) 保留記錄。通報媒體和頒獎不在標準要求範圍。'},
+  {type:'fill',section:'s2',scenario:'',q:'請填入正確詞語，完成 ISO 27001 風險管理核心要求的描述。',template:'ISO 27001 條款 6.1.2 要求組織進行 [BLANK_0]；條款 6.1.3 要求制定 [BLANK_1] 並取得風險擁有者核准。',words:['風險評鑑','風險處置計畫','資產清單','稽核計畫','事件回應計畫'],ans:['風險評鑑','風險處置計畫'],exp:'條款 6.1.2 = 風險評鑑（Risk Assessment）：識別、分析、評估風險。條款 6.1.3 = 風險處置計畫（Risk Treatment Plan）：選擇處置選項並取得風險擁有者核准，保留文件化資訊。'},
+  {type:'match',section:'s2',scenario:'',q:'請將左側的 ISO 27001:2022 附錄 A 控制措施與右側的控制類別正確配對。',left:['A.5.1 資訊安全政策','A.7.4 實體安全監控','A.8.5 特殊存取管理','A.6.1 篩選'],right:['A. 技術性控制','B. 人員性控制','C. 實體性控制','D. 組織性控制'],ans:{'A.5.1 資訊安全政策':'D','A.7.4 實體安全監控':'C','A.8.5 特殊存取管理':'A','A.6.1 篩選':'B'},exp:'四大類別：組織性（政策/流程）、人員性（人員管理）、實體性（場所/設備安全）、技術性（IT 系統控制）。'},
+  {type:'order',section:'s2',scenario:'',q:'請將以下 ISO 27001 不符合事項處理流程步驟依正確順序排列。',items:['評估矯正措施有效性','發現並記錄不符合事項','保留文件化記錄','分析根本原因','實施矯正措施'],ans:[1,3,4,0,2],exp:'正確順序：① 發現並記錄 → ② 分析根本原因 → ③ 實施矯正措施 → ④ 評估有效性 → ⑤ 保留記錄。此流程來自條款 10.1。'}
+],
+s3:[
+  {type:'single',section:'s3',scenario:'一位稽核員在接受委託前，發現自己三年前曾擔任被稽核公司的資安顧問。',q:'根據 ISO 19011 稽核原則，此稽核員應採取什麼行動？',opts:['A. 接受委託，三年前的工作與現在無關','B. 向委託方揭露此潛在利益衝突，由委託方決定','C. 由於有背景知識，此稽核員更適合執行','D. 直接拒絕，曾接觸過的組織永遠不能稽核'],ans:'B',exp:'ISO 19011 獨立性原則要求稽核員揭露任何可能影響客觀性的情況。是否構成利益衝突由委託方評估，而非稽核員單方面決定。'},
+  {type:'single',section:'s3',scenario:'稽核員在 Stage 2 稽核中，IT 主管說：「我告訴你有做備份就好了，不用看記錄。」',q:'稽核員應如何回應？',opts:['A. 接受口頭保證，節省稽核時間','B. 說明稽核需要客觀證據，要求查看備份記錄及測試報告','C. 只記錄主管的聲明，不需驗證','D. 口頭保證在法律上已足夠'],ans:'B',exp:'ISO 19011 要求稽核證據必須是「可驗證的」，口頭陳述需要文件或觀察所佐證。稽核員必須要求實際的客觀證據來確認控制措施有效實施。'},
+  {type:'single',section:'s3',scenario:'在稽核結束會議中，管理層對一項重大不符合事項強烈異議，認為稽核員解讀有誤。',q:'稽核員最適當的回應是？',opts:['A. 立即修改發現以避免衝突','B. 耐心聆聽，若有新的有效證據可重新評估；若無，維持基於事實的立場','C. 完全不接受任何異議，稽核員判斷具最終效力','D. 暫停稽核等待管理層冷靜'],ans:'B',exp:'ISO 19011 要求稽核員展現「職業素養」與「基於證據的方法」。應開放態度聆聽，但最終判斷須基於客觀證據，不可因壓力妥協。'},
+  {type:'single',section:'s3',scenario:'',q:'ISO 19011 定義的「重大不符合事項（Major NC）」與「輕微不符合事項（Minor NC）」的主要區別是？',opts:['A. 重大 NC 只能由外部稽核員發現','B. 重大 NC 對 ISMS 有效性造成系統性失效；輕微 NC 是個別未符合要求','C. 兩者沒有實質差別，只是嚴重程度的主觀判斷','D. 重大 NC 必須立即停止認證'],ans:'B',exp:'重大 NC：系統性失效，如完全未建立風險評鑑程序。輕微 NC：個別未符合，如單次文件更新延遲。兩者都需矯正措施，但重大 NC 影響認證核發。'},
+  {type:'single',section:'s3',scenario:'',q:'ISO 19011 稽核的七大原則中，哪一項要求稽核員不能稽核自身的工作？',opts:['A. 保密性（Confidentiality）','B. 誠信（Integrity）','C. 獨立性（Independence）','D. 基於證據的方法（Evidence-based Approach）'],ans:'C',exp:'獨立性原則是稽核客觀性和公正性的基礎。稽核員必須獨立於被稽核活動，不存在自我審查情形，以確保稽核結論的可信度。'},
+  {type:'multi',section:'s3',scenario:'',q:'ISO 19011:2018 定義的稽核七大原則中，以下哪三項是正確的？（請選擇 3 個正確答案）',opts:['A. 誠信（Integrity）','B. 效率優先（Efficiency First）','C. 保密性（Confidentiality）','D. 獨立性（Independence）','E. 零容忍（Zero Tolerance）'],ans:['A','C','D'],exp:'ISO 19011 七大稽核原則：誠信、公正展現、適當的職業素養、保密性、獨立性、基於證據的方法、風險導向方法。效率優先和零容忍不在原則清單中。'},
+  {type:'fill',section:'s3',scenario:'',q:'請填入正確詞語，完成稽核發現分類的描述。',template:'稽核員發現某項要求完全未建立，對 ISMS 有效性造成系統性失效，應分類為 [BLANK_0]；若只是個別未符合要求但不影響整體有效性，則分類為 [BLANK_1]。',words:['重大不符合事項','輕微不符合事項','改善機會','觀察事項','稽核發現'],ans:['重大不符合事項','輕微不符合事項'],exp:'重大 NC：系統性失效，影響認證核發。輕微 NC：個別問題，不影響整體有效性。兩者都需要矯正措施計畫及追蹤驗證。'},
+  {type:'match',section:'s3',scenario:'',q:'請將左側的稽核類型與右側的定義正確配對。',left:['第一方稽核','第二方稽核','第三方稽核'],right:['A. 由獨立認證機構執行的外部稽核','B. 組織對自身的內部稽核','C. 客戶對供應商進行的稽核'],ans:{'第一方稽核':'B','第二方稽核':'C','第三方稽核':'A'},exp:'第一方=內部稽核（自我評估）；第二方=供應商/客戶稽核（外部利益相關方）；第三方=獨立認證機構稽核（最正式，用於取得認證）。'},
+  {type:'order',section:'s3',scenario:'',q:'請將以下稽核員執行訪談的步驟依正確順序排列。',items:['記錄訪談結果與證據','準備訪談問題與查核清單','向受訪者確認記錄正確性','執行訪談並收集資訊','說明訪談目的與範圍'],ans:[1,4,3,0,2],exp:'正確順序：① 準備問題 → ② 說明目的 → ③ 執行訪談收集資訊 → ④ 記錄結果 → ⑤ 確認記錄正確性。訪談是最重要的稽核證據收集方法之一。'},
+  {type:'single',section:'s3',scenario:'稽核員在現場稽核時，一位員工說：「我可以私下告訴你內部問題，但請不要記入報告。」',q:'稽核員應如何處理？',opts:['A. 接受此安排，非正式資訊有助了解真實情況','B. 說明稽核原則要求資訊公正呈現，建議員工透過正式管道反映，並透過稽核程序驗證','C. 完全忽略此員工，只接受正式文件','D. 承諾保密以換取更多資訊'],ans:'B',exp:'稽核員需謹慎處理非正式資訊，不能承諾對特定資訊保密而影響稽核完整性。保密性原則保護稽核過程中獲取的資訊，但不代表可選擇性揭露。'}
+],
+s4:[
+  {type:'single',section:'s4',scenario:'',q:'Stage 1（文件審查）稽核的主要目的是？',opts:['A. 正式評估 ISMS 控制措施的有效實施','B. 評估 ISMS 文件化程度及組織是否準備好接受 Stage 2 稽核','C. 只是形式上的文件收集，不影響 Stage 2','D. 核發臨時認證證書'],ans:'B',exp:'Stage 1 主要目的：審查 ISMS 文件化程度、評估範圍及 SoA 完整性、了解 ISMS 準備狀態、識別可能影響 Stage 2 的重大問題。'},
+  {type:'single',section:'s4',scenario:'被稽核組織要求稽核員不要訪談某部門，因為「該部門正在進行重要專案」。',q:'稽核員應如何回應？',opts:['A. 接受要求，尊重被稽核組織安排','B. 說明排除關鍵部門可能影響稽核完整性，應與委託方（認證機構）溝通評估','C. 直接取消稽核','D. 改以電話訪談替代'],ans:'B',exp:'被稽核方不應單方面排除關鍵稽核區域。稽核員應向委託方（認證機構）報告，評估排除是否影響稽核完整性和結論可靠性。'},
+  {type:'single',section:'s4',scenario:'',q:'開幕會議（Opening Meeting）的主要目的是？',opts:['A. 讓稽核員介紹個人背景','B. 確認稽核目標、範圍、時程、方法，及稽核員與被稽核組織的角色','C. 讓被稽核組織展示 ISMS 成就','D. 決定是否核發認證'],ans:'B',exp:'開幕會議目的：確認稽核目標、範圍和準則；介紹稽核計畫和時程；說明稽核方法；確認溝通管道；解答被稽核組織疑問。'},
+  {type:'single',section:'s4',scenario:'',q:'稽核計畫（Audit Plan）最應優先考量的因素是？',opts:['A. 選擇距離最近的辦公室優先稽核，節省交通成本','B. 根據風險高低、控制措施重要性決定稽核深度與時間分配','C. 所有地點分配相同時間確保公平','D. 依照組織的要求排列稽核優先順序'],ans:'B',exp:'稽核計畫應基於風險導向，將更多資源分配給風險較高、控制措施較關鍵的領域，以最大化稽核效果。'},
+  {type:'single',section:'s4',scenario:'Stage 1 後，組織聲稱已修正風險評鑑文件不完整的問題，要求直接進行 Stage 2。',q:'稽核員應如何處理？',opts:['A. 相信聲明，直接安排 Stage 2','B. Stage 2 開始前確認 Stage 1 重大問題是否已有效解決，必要時要求提供修正文件','C. Stage 1 問題自動在 Stage 2 中驗證','D. 通知認證機構取消 Stage 2'],ans:'B',exp:'Stage 1 的目的之一是評估組織是否準備好接受 Stage 2。若 Stage 1 發現重大問題，應在 Stage 2 之前確認是否已有效解決。'},
+  {type:'multi',section:'s4',scenario:'',q:'完整的稽核計畫（Audit Plan）應包含哪四項核心要素？（請選擇 4 個正確答案）',opts:['A. 稽核目標與範圍','B. 稽核員的個人薪資資訊','C. 稽核準則（依據什麼標準評估）','D. 稽核時程與稽核小組分工','E. 被稽核部門與流程','F. 被稽核組織的財務報告'],ans:['A','C','D','E'],exp:'稽核計畫核心要素：稽核目標、範圍、準則、方法、時程、稽核小組分工、被稽核部門/流程、後勤安排。薪資資訊和財務報告不屬於稽核計畫內容。'},
+  {type:'fill',section:'s4',scenario:'',q:'請填入正確詞語，完成認證稽核兩個階段的描述。',template:'認證稽核分兩階段：[BLANK_0] 主要審查文件化程度及 ISMS 準備狀態；[BLANK_1] 則進行現場驗證，評估 ISMS 是否有效實施。',words:['Stage 1','Stage 2','Stage 3','初次稽核','文件稽核'],ans:['Stage 1','Stage 2'],exp:'Stage 1（文件審查）評估文件準備度；Stage 2（現場稽核）驗證實際執行情況。兩個階段都是正式認證稽核的必要組成部分。'},
+  {type:'match',section:'s4',scenario:'',q:'請將左側的稽核文件與右側的用途正確配對。',left:['稽核計畫','查核清單','稽核報告','不符合事項報告'],right:['A. 記錄稽核發現及結論','B. 確保稽核系統性完整性的工作工具','C. 描述具體問題及所違反條款','D. 說明稽核目標、範圍及時程'],ans:{'稽核計畫':'D','查核清單':'B','稽核報告':'A','不符合事項報告':'C'},exp:'稽核計畫=事前規劃；查核清單=現場工具；稽核報告=整體結論；不符合事項報告=具體問題記錄，四者各有不同用途。'},
+  {type:'order',section:'s4',scenario:'',q:'請將以下稽核準備階段的活動依正確順序排列。',items:['制定稽核計畫','審查前次稽核報告','進行 Stage 1 文件審查','確認稽核委託及目標','準備查核清單'],ans:[1,3,0,4,2],exp:'正確順序：① 審查前次稽核報告 → ② 確認委託及目標 → ③ 制定稽核計畫 → ④ 準備查核清單 → ⑤ 進行 Stage 1 文件審查。充分準備是確保稽核品質的關鍵。'},
+  {type:'single',section:'s4',scenario:'',q:'「稽核抽樣（Audit Sampling）」的主要目的是？',opts:['A. 減少稽核工作量，只審查少數文件','B. 從代表性樣本中收集足夠的稽核證據，以對整體 ISMS 符合性做出合理結論','C. 隨機選擇文件，避免被指控有偏見','D. 只審查高風險領域，忽略低風險領域'],ans:'B',exp:'稽核抽樣是在有限時間內獲得足夠稽核信心的方法。好的抽樣應具備代表性、涵蓋高風險區域、足以支撐稽核結論，而非只是節省時間。'}
+],
+s5:[
+  {type:'single',section:'s5',scenario:'Stage 2 稽核中，發現 TechCo 新增了雲端開發環境，但 ISMS 範圍文件和 SoA 均未更新。',q:'稽核員應如何分類此發現？',opts:['A. 觀察事項，雲端環境是新技術，組織有時間調整','B. 重大不符合事項，ISMS 範圍未涵蓋實際業務，SoA 未更新，導致系統性失效','C. 輕微不符合事項，文件更新有延遲','D. 改善機會，建議組織更新文件'],ans:'B',exp:'ISMS 範圍是基礎文件（條款 4.3），未涵蓋實際業務環境代表 ISMS 無法有效管理相關風險。SoA 未更新代表控制措施評估失效，屬系統性問題，應分類為重大不符合事項。'},
+  {type:'single',section:'s5',scenario:'',q:'稽核報告中的不符合事項，應包含哪些核心要素？',opts:['A. 只需記錄「未符合 ISO 27001 要求」','B. 事實依據（客觀證據）、所違反的標準條款，及對 ISMS 有效性的影響','C. 只需提供改善建議','D. 只需說明問題的財務影響'],ans:'B',exp:'不符合事項報告應包含：(1) 事實依據——觀察到的具體情況；(2) 違反的準則——具體條款號碼；(3) 影響評估——對 ISMS 有效性的影響。完整記錄是組織後續矯正行動的基礎。'},
+  {type:'single',section:'s5',scenario:'',q:'「監督稽核（Surveillance Audit）」與「再認證稽核（Recertification Audit）」的主要區別是？',opts:['A. 兩者完全相同，都是全面性審查','B. 監督稽核（第1、2年）是年度例行查核；再認證稽核（第3年）是全面性審查，決定是否更新認證','C. 監督稽核只審查有問題的領域','D. 監督稽核由組織自行執行，再認證稽核才由外部機構執行'],ans:'B',exp:'ISO 27001 認證週期：第1、2年進行年度監督稽核確認持續符合；第3年進行再認證稽核全面審查，決定是否更新認證（新的三年週期）。'},
+  {type:'single',section:'s5',scenario:'稽核結束後，被稽核組織管理層聯繫稽核員，要求修改稽核報告中對其不利的發現。',q:'稽核員應如何回應？',opts:['A. 若管理層有充分說明，可修改部分發現','B. 說明稽核報告基於客觀證據，不接受正式申訴程序之外的修改要求','C. 為維持良好關係，可軟化部分措辭','D. 同意修改，但需在報告中注明已修改'],ans:'B',exp:'稽核報告的公正性和完整性是稽核獨立性的核心。若被稽核組織有異議，應透過認證機構的正式申訴程序處理，不能在程序外修改報告。'},
+  {type:'single',section:'s5',scenario:'',q:'執行訪談時，使用「開放式問題」的主要優點是？',opts:['A. 可以快速得到是/否的明確答案','B. 能獲取更豐富的資訊，讓受訪者描述實際情況和流程','C. 方便記錄和分析','D. 確保受訪者不會偏離主題'],ans:'B',exp:'開放式問題（如「請描述您如何...」）讓受訪者自由描述，能獲取比是/否問題更豐富的資訊。稽核員應使用開放式問題為主，輔以澄清問題，並要求受訪者提供實際例子作為客觀證據。'},
+  {type:'multi',section:'s5',scenario:'',q:'完整的稽核發現（Audit Findings）可以包含哪四種類型？（請選擇 4 個正確答案）',opts:['A. 符合事項（Conformity）','B. 重大不符合事項（Major NC）','C. 財務罰款建議','D. 輕微不符合事項（Minor NC）','E. 改善機會（OFI）','F. 法律訴訟建議'],ans:['A','B','D','E'],exp:'完整稽核發現包含：符合事項（確認控制有效）、重大不符合（系統性失效）、輕微不符合（個別問題）、改善機會（OFI，可進一步改善的建議）。稽核員不做財務或法律建議。'},
+  {type:'fill',section:'s5',scenario:'',q:'請填入正確詞語，完成稽核結束會議的描述。',template:'結束會議的主要目的是正式呈現稽核 [BLANK_0]，確保被稽核組織理解發現內容，並說明後續的 [BLANK_1] 程序。',words:['發現','計畫','矯正措施','目標','申訴'],ans:['發現','矯正措施'],exp:'結束會議正式呈現稽核發現（符合、不符合事項、觀察事項），確認被稽核組織理解，並說明後續矯正措施的時程和追蹤方式。認證決定由認證機構做出，非在結束會議決定。'},
+  {type:'match',section:'s5',scenario:'',q:'請將左側的稽核技術與右側的操作描述正確配對。',left:['訪談（Interview）','觀察（Observation）','文件審查','分析（Analysis）'],right:['A. 審查伺服器日誌是否可被竄改','B. 查看備份程序文件及記錄','C. 詢問員工如何執行存取控制','D. 觀看系統管理員實際操作備份程序'],ans:{'訪談（Interview）':'C','觀察（Observation）':'D','文件審查':'B','分析（Analysis）':'A'},exp:'四種稽核技術：訪談=詢問人員、觀察=觀看活動執行、文件審查=查看記錄文件、分析=評估數據/記錄特性。各有不同的適用情境。'},
+  {type:'order',section:'s5',scenario:'',q:'請將以下現場稽核（Stage 2）的活動步驟依正確順序排列。',items:['撰寫不符合事項報告','執行開幕會議','提交稽核報告','進行現場訪談與文件審查','執行結束會議'],ans:[1,3,4,0,2],exp:'Stage 2 現場稽核順序：① 開幕會議 → ② 現場訪談與文件審查 → ③ 結束會議 → ④ 撰寫不符合事項報告 → ⑤ 提交稽核報告。'},
+  {type:'single',section:'s5',scenario:'稽核員發現組織的書面程序與員工實際執行方式不同。',q:'稽核員應如何處理？',opts:['A. 相信員工描述，書面程序可能已過時','B. 記錄差異，進一步調查確認是「文件未更新」還是「程序未被遵循」','C. 直接記錄為不符合事項','D. 詢問主管後再決定'],ans:'B',exp:'文件與實際執行的差異可能有多種原因：(1) 程序有效但文件未及時更新，(2) 員工未遵循程序。稽核員需透過多種方式確認實際情況，再判斷是否為不符合事項及其分類。'}
+]};
+
+// ══════════════════════════════════════════
+// 狀態變數
+// ══════════════════════════════════════════
+let examQs=[], answers={}, submitted={}, cur=0, mode='full';
+let selChip=null, selSlot=null, selLeft=null, dragPos=null;
+let timerInterval=null, timeLeft=6300;
+
+const SNAMES={s1:'Section 1 · ISMS 概論',s2:'Section 2 · ISO 27001 條款 ★',s3:'Section 3 · 稽核原則',s4:'Section 4 · 稽核準備',s5:'Section 5 · 執行稽核'};
+const TNAMES={single:'單選題',multi:'多選題',fill:'填空題',match:'配對題',order:'排序題'};
+const TCLS={single:'tb-s',multi:'tb-m',fill:'tb-f',match:'tb-mt',order:'tb-o'};
+
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+
+// ══════════════════════════════════════════
+// 開始
+// ══════════════════════════════════════════
+function startMode(m){
+  mode=m; answers={}; submitted={}; cur=0;
+  selChip=null; selSlot=null; selLeft=null;
+
+  if(m==='full'){
+    examQs=[];
+    ['s1','s2','s3','s4','s5'].forEach(s=>{
+      examQs.push(...shuffle(BANK[s]).slice(0,8).map(q=>({...q})));
+    });
+  } else {
+    examQs=shuffle(BANK[m]).map(q=>({...q}));
+  }
+
+  document.getElementById('screen-start').style.display='none';
+  document.getElementById('screen-exam').style.display='block';
+  document.getElementById('spill').style.display='block';
+
+  if(m==='full'){
+    document.getElementById('timer').style.display='block';
+    timeLeft=6300; updateTimer();
+    timerInterval=setInterval(()=>{timeLeft--;updateTimer();if(timeLeft<=0){clearInterval(timerInterval);showResult();}},1000);
+  }
+  buildSecBar(); renderQ();
+}
+
+function updateTimer(){
+  const h=Math.floor(timeLeft/3600),m=Math.floor((timeLeft%3600)/60),s=timeLeft%60;
+  const el=document.getElementById('timer');
+  el.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  el.className=timeLeft<600?'warn':'';
+}
+
+// ══════════════════════════════════════════
+// Section bar
+// ══════════════════════════════════════════
+function buildSecBar(){
+  if(mode!=='full'){document.getElementById('secbar').style.display='none';return;}
+  const bar=document.getElementById('secbar'); bar.innerHTML='';
+  ['s1','s2','s3','s4','s5'].forEach(s=>{
+    const d=document.createElement('div');
+    d.className='seg'+(s==='s2'?' s2':''); d.id='seg-'+s; bar.appendChild(d);
+  });
+  updateSecBar();
+}
+function updateSecBar(){
+  if(mode!=='full') return;
+  ['s1','s2','s3','s4','s5'].forEach(s=>{
+    const el=document.getElementById('seg-'+s); if(!el) return;
+    const sqs=examQs.map((q,i)=>({q,i})).filter(x=>x.q.section===s);
+    const allDone=sqs.length>0&&sqs.every(x=>submitted[x.i]!==undefined);
+    const isCur=examQs[cur]?.section===s;
+    el.className='seg'+(s==='s2'?' s2':'')+(allDone?' done':isCur?' active':'');
+  });
+}
+
+// ══════════════════════════════════════════
+// 渲染
+// ══════════════════════════════════════════
+function renderQ(){
+  selChip=null; selSlot=null; selLeft=null;
+  const q=examQs[cur], total=examQs.length;
+  const doneCount=Object.keys(submitted).length, isSub=submitted[cur]!==undefined;
+  const isS2=q.section==='s2';
+  document.getElementById('prog-t').textContent=`題目 ${cur+1} / ${total}`;
+  document.getElementById('prog-a').textContent=`已送出 ${doneCount} 題`;
+  document.getElementById('spill').textContent=`${doneCount} / ${total}`;
+
+  let html=`<div class="sec-lbl ${isS2?'hot':'def'}">${SNAMES[q.section]}</div>`;
+  if(q.scenario) html+=`<div class="sc-box"><div class="sc-lbl">情境</div>${q.scenario}</div>`;
+  html+=`<div class="q-card"><div class="q-meta"><span class="tb ${TCLS[q.type]}">${TNAMES[q.type]}</span><span>Q${cur+1}</span></div><div class="q-text">${q.q}</div>`;
+
+  if(q.type==='single') html+=buildSingle(q,isSub);
+  else if(q.type==='multi') html+=buildMulti(q,isSub);
+  else if(q.type==='fill') html+=buildFill(q,isSub);
+  else if(q.type==='match') html+=buildMatch(q,isSub);
+  else if(q.type==='order') html+=buildOrder(q,isSub);
+
+  if(isSub){
+    const ok=isCorrect(q,answers[cur]);
+    html+=`<div class="explain"><div class="elb">${ok?'✓ 答對了！':'✗ 答錯了！'} 解析</div><p>${q.exp}</p></div>`;
+  }
+  html+=`</div>`;
+  document.getElementById('qarea').innerHTML=html;
+  bindEvents(q,isSub); updateBtns(isSub); updateSecBar();
+}
+
+function buildSingle(q,done){
+  const sel=answers[cur]; let html='';
+  q.opts.forEach((opt,i)=>{
+    const key=String.fromCharCode(65+i);
+    let cls='opt'+(done?' locked':'');
+    if(done){if(key===q.ans)cls+=' correct';else if(key===sel)cls+=' wrong';}
+    else if(key===sel)cls+=' sel';
+    html+=`<div class="${cls}" data-k="${key}"><div class="opt-k">${key}</div><div class="opt-t">${opt.substring(3)}</div></div>`;
+  });
+  return html;
+}
+
+function buildMulti(q,done){
+  const sel=answers[cur]||[]; let html=`<div class="hint">多選題：請選擇所有正確答案</div>`;
+  q.opts.forEach((opt,i)=>{
+    const key=String.fromCharCode(65+i);
+    let cls='opt'+(done?' locked':'');
+    if(done){
+      const inA=q.ans.includes(key),inS=sel.includes(key);
+      if(inA&&inS)cls+=' correct';else if(!inA&&inS)cls+=' wrong';else if(inA&&!inS)cls+=' missed';
+    } else if(sel.includes(key))cls+=' sel';
+    html+=`<div class="${cls}" data-k="${key}"><div class="opt-k">${key}</div><div class="opt-t">${opt.substring(3)}</div></div>`;
+  });
+  return html;
+}
+
+function buildFill(q,done){
+  const filled=answers[cur]||{};
+  let tmpl=q.template;
+  (tmpl.match(/\[BLANK_\d+\]/g)||[]).forEach((b,i)=>{
+    const val=filled[i]||'', cls='slot'+(done?(val===q.ans[i]?' correct-s':' wrong-s'):(val?' filled':''));
+    tmpl=tmpl.replace(b,`<span class="${cls}" data-idx="${i}">${val||'點此填入'}</span>`);
+  });
+  const usedVals=Object.values(filled);
+  let html=`<div class="fill-text">${tmpl}</div><div class="pool">`;
+  q.words.forEach(w=>{
+    const used=!done&&usedVals.includes(w);
+    html+=`<div class="chip${used?' used':''}${done?' lkd':''}" data-word="${w}">${w}</div>`;
+  });
+  html+=`</div>`;
+  if(done) html+=`<div style="font-size:12px;color:var(--g5);margin-top:.5rem">正確答案：${q.ans.join('、')}</div>`;
+  return html;
+}
+
+function buildMatch(q,done){
+  const paired=answers[cur]||{}, usedR=Object.values(paired);
+  let lHtml='',rHtml='';
+  q.left.forEach(l=>{
+    const mR=paired[l], isAct=!done&&selLeft===l;
+    let cls='mi lft'+(done?' lkd':'');
+    if(mR) cls+=' md';
+    if(isAct) cls+=' act';
+    if(done&&mR) cls+=paired[l]===q.ans[l]?' mc':' mw';
+    lHtml+=`<div class="${cls}" data-left="${l}">${mR?'<span style="font-size:10px;font-weight:700;color:var(--teal);margin-right:4px">✓</span>':''}${l}${mR?`<br><span style="font-size:11px;color:var(--teal)">→ ${mR}</span>`:''}
+    </div>`;
+  });
+  q.right.forEach(r=>{
+    const isUsed=usedR.includes(r);
+    let cls='mi rgt'+((done||isUsed)?' lkd':'');
+    if(isUsed) cls+=' md';
+    if(done){
+      const lk=Object.keys(q.ans).find(k=>q.ans[k]===r);
+      if(lk) cls+=paired[lk]===r?' mc':' mw';
+    }
+    rHtml+=`<div class="${cls}" data-right="${r}">${r}</div>`;
+  });
+  let html=`<div style="font-size:11px;color:var(--g4);margin-bottom:.5rem;font-style:italic">先點左側項目（變藍色），再點右側選項完成配對</div>
+  <div class="match-wrap"><div class="match-col"><h4>左側項目</h4>${lHtml}</div><div class="match-col"><h4>右側選項</h4>${rHtml}</div></div>`;
+  if(done) html+=`<div style="font-size:12px;color:var(--g5)">正確配對：${Object.entries(q.ans).map(([k,v])=>k+' → '+v).join('　')}</div>`;
+  return html;
+}
+
+function buildOrder(q,done){
+  const order=answers[cur]||q.items.map((_,i)=>i); let html=`<div class="order-hint">拖曳項目上下移動，調整至正確順序</div>`;
+  order.forEach((origIdx,pos)=>{
+    let cls='oi'+(done?' lkd':'');
+    if(done) cls+=origIdx===q.ans[pos]?' oc':' ow';
+    html+=`<div class="${cls}" draggable="${!done}" data-pos="${pos}" data-orig="${origIdx}">
+      <div class="on">${pos+1}</div><div class="di">${done?'':'⋮⋮'}</div>
+      <div style="flex:1">${q.items[origIdx]}</div></div>`;
+  });
+  if(done) html+=`<div style="font-size:12px;color:var(--g5);margin-top:.5rem">正確順序：${q.ans.map(i=>q.items[i]).join(' → ')}</div>`;
+  return html;
+}
+
+// ══════════════════════════════════════════
+// 事件
+// ══════════════════════════════════════════
+function bindEvents(q,done){
+  if(done) return;
+  if(q.type==='single'){
+    document.querySelectorAll('.opt').forEach(el=>{
+      el.addEventListener('click',()=>{answers[cur]=el.dataset.k;renderQ();});
+    });
+  } else if(q.type==='multi'){
+    document.querySelectorAll('.opt').forEach(el=>{
+      el.addEventListener('click',()=>{
+        if(!answers[cur])answers[cur]=[];
+        const k=el.dataset.k,arr=answers[cur],i=arr.indexOf(k);
+        if(i>-1)arr.splice(i,1);else arr.push(k);
+        renderQ();
+      });
+    });
+  } else if(q.type==='fill'){
+    document.querySelectorAll('.chip:not(.used):not(.lkd)').forEach(c=>{
+      c.addEventListener('click',()=>{
+        if(selChip===c.dataset.word){selChip=null;document.querySelectorAll('.chip').forEach(x=>x.classList.remove('sel-c'));}
+        else{selChip=c.dataset.word;document.querySelectorAll('.chip').forEach(x=>x.classList.remove('sel-c'));c.classList.add('sel-c');}
+        if(selSlot!==null&&selChip){doFill(selSlot,selChip);selChip=null;selSlot=null;}
+      });
+    });
+    document.querySelectorAll('.slot').forEach(s=>{
+      s.addEventListener('click',()=>{
+        const idx=parseInt(s.dataset.idx);
+        if(s.classList.contains('filled')){if(!answers[cur])answers[cur]={};delete answers[cur][idx];renderQ();return;}
+        if(selChip){doFill(idx,selChip);selChip=null;selSlot=null;}
+        else selSlot=idx;
+      });
+    });
+  } else if(q.type==='match'){
+    document.querySelectorAll('.mi.lft:not(.md):not(.lkd)').forEach(el=>{
+      el.addEventListener('click',()=>{selLeft=(selLeft===el.dataset.left)?null:el.dataset.left;renderQ();});
+    });
+    document.querySelectorAll('.mi.rgt:not(.md):not(.lkd)').forEach(el=>{
+      el.addEventListener('click',()=>{
+        if(!selLeft)return;
+        if(!answers[cur])answers[cur]={};
+        answers[cur][selLeft]=el.dataset.right;selLeft=null;renderQ();
+      });
+    });
+  } else if(q.type==='order'){
+    document.querySelectorAll('.oi:not(.lkd)').forEach(el=>{
+      el.addEventListener('dragstart',()=>{dragPos=parseInt(el.dataset.pos);el.classList.add('dragging');});
+      el.addEventListener('dragend',()=>{el.classList.remove('dragging');document.querySelectorAll('.oi').forEach(x=>x.classList.remove('over'));});
+      el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('over');});
+      el.addEventListener('dragleave',()=>el.classList.remove('over'));
+      el.addEventListener('drop',e=>{
+        e.preventDefault();el.classList.remove('over');
+        const dp=parseInt(el.dataset.pos);
+        if(dragPos===null||dragPos===dp)return;
+        const arr=answers[cur]||q.items.map((_,i)=>i);
+        [arr[dragPos],arr[dp]]=[arr[dp],arr[dragPos]];
+        answers[cur]=[...arr];renderQ();
+      });
+    });
+  }
+}
+
+function doFill(idx,word){if(!answers[cur])answers[cur]={};answers[cur][idx]=word;renderQ();}
+
+// ══════════════════════════════════════════
+// 送出與判斷
+// ══════════════════════════════════════════
+function canSubmit(){
+  const q=examQs[cur],a=answers[cur];
+  if(!a)return false;
+  if(q.type==='single')return !!a;
+  if(q.type==='multi')return Array.isArray(a)&&a.length>0;
+  if(q.type==='fill'){const n=(q.template.match(/\[BLANK_\d+\]/g)||[]).length;return typeof a==='object'&&Object.keys(a).length===n;}
+  if(q.type==='match')return typeof a==='object'&&Object.keys(a).length===q.left.length;
+  if(q.type==='order')return Array.isArray(a)&&a.length===q.items.length;
+  return false;
+}
+
+function doSubmit(){
+  if(!canSubmit())return;
+  if(examQs[cur].type==='order'&&!answers[cur]) answers[cur]=examQs[cur].items.map((_,i)=>i);
+  submitted[cur]=true;renderQ();
+}
+
+function isCorrect(q,ans){
+  if(!ans)return false;
+  if(q.type==='single')return ans===q.ans;
+  if(q.type==='multi')return Array.isArray(ans)&&ans.length===q.ans.length&&q.ans.every(a=>ans.includes(a));
+  if(q.type==='fill')return Array.isArray(q.ans)&&q.ans.every((a,i)=>ans[i]===a);
+  if(q.type==='match')return Object.keys(q.ans).every(k=>ans[k]===q.ans[k]);
+  if(q.type==='order')return Array.isArray(ans)&&q.ans.every((a,i)=>ans[i]===a);
+  return false;
+}
+
+function updateBtns(isSub){
+  const total=examQs.length,allDone=Object.keys(submitted).length===total;
+  const sub=document.getElementById('btn-sub'),nxt=document.getElementById('btn-nxt'),fin=document.getElementById('btn-fin');
+  document.getElementById('btn-prev').disabled=cur===0;
+  if(!isSub){
+    sub.style.display='';sub.disabled=!canSubmit();
+    nxt.style.display='none';fin.style.display='none';
+  } else {
+    sub.style.display='none';
+    if(allDone){fin.style.display='';nxt.style.display='none';}
+    else if(cur<total-1){nxt.style.display='';fin.style.display='none';}
+    else{nxt.style.display='none';fin.style.display='';}
+  }
+}
+
+function nav(dir){cur+=dir;renderQ();}
+
+// ══════════════════════════════════════════
+// 結果
+// ══════════════════════════════════════════
+function showResult(){
+  clearInterval(timerInterval);
+  document.getElementById('screen-exam').style.display='none';
+  document.getElementById('timer').style.display='none';
+  const total=examQs.length;
+  let correct=0;
+  examQs.forEach((q,i)=>{if(isCorrect(q,answers[i]))correct++;});
+  const pct=Math.round(correct/total*100),pass=pct>=50;
+
+  const secStats={};
+  ['s1','s2','s3','s4','s5'].forEach(s=>{
+    const sqs=examQs.map((q,i)=>({q,i})).filter(x=>x.q.section===s);
+    if(!sqs.length){secStats[s]=null;return;}
+    const sc=sqs.filter(x=>isCorrect(x.q,answers[x.i])).length;
+    secStats[s]={correct:sc,total:sqs.length,pct:Math.round(sc/sqs.length*100)};
+  });
+
+  let html=`<div class="result-hero">
+    <div class="ri ${pass?'pass':'fail'}">${pass?'✓':'✗'}</div>
+    <div class="rt ${pass?'pass':'fail'}">${pass?'恭喜通過！':'尚未通過，繼續加油！'}</div>
+    <div class="rs">${correct}<span style="font-size:22px;color:var(--g4)">/${total}</span></div>
+    <div class="rsb">答對率 ${pct}%　·　通過線 50%</div>
+  </div>
+  <div class="sec-break">`;
+
+  ['s1','s2','s3','s4','s5'].forEach(s=>{
+    const st=secStats[s];
+    if(!st){html+=`<div class="sb" style="background:var(--g1);border-color:var(--g2)"><div class="sb-lbl" style="color:var(--g4)">${s.toUpperCase()}</div><div class="sb-pct" style="color:var(--g4)">-</div><div class="sb-st" style="color:var(--g4)">無題目</div></div>`;return;}
+    const sp=st.pct>=50;
+    html+=`<div class="sb ${sp?'pass':'fail'}"><div class="sb-lbl">${s.toUpperCase()}</div><div class="sb-pct">${st.pct}%</div><div class="sb-st">${sp?'通過':'未通過'} ${st.correct}/${st.total}</div></div>`;
+  });
+  html+=`</div><div class="divider"></div><div class="rev-head">題目回顧</div>`;
+
+  examQs.forEach((q,i)=>{
+    const ok=isCorrect(q,answers[i]);
+    html+=`<div class="rev-item ${ok?'rp':'rf'}">
+      <div style="font-size:16px;flex-shrink:0;margin-top:1px">${ok?'✓':'✗'}</div>
+      <div><div class="rev-q">Q${i+1}. [${TNAMES[q.type]}] ${q.q.length>60?q.q.substring(0,60)+'…':q.q}</div>
+      <div class="rev-d"><span class="${ok?'rev-ok':'rev-ng'}">${ok?'答對':'答錯'}</span><span>${SNAMES[q.section]}</span></div></div>
+    </div>`;
+  });
+
+  html+=`<div style="display:flex;gap:10px;margin-top:2rem;flex-wrap:wrap">
+    <button class="btn btn-pri" onclick="location.reload()">返回首頁</button>
+    <button class="btn btn-red" onclick="startMode('s2')">Section 2 再練習</button>
+  </div>`;
+
+  const rv=document.getElementById('screen-result');
+  rv.style.display='block'; rv.innerHTML=html; window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
