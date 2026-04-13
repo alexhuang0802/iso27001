@@ -4,7 +4,10 @@
       "Bash(git --version)",
       "Bash(gh --version)",
       "Bash(vercel --version)",
-      "Bash(npx --version)"
+      "Bash(npx --version)",
+      "WebFetch(domain:jjlearniso27.vercel.app)",
+      "Bash(node -c index.html)",
+      "Bash(grep -cn \"\\\\\\\\\\\\\\\\\" index.html)"
     ]
   }
 }
